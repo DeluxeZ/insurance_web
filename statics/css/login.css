@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+#title {
+    position: absolute;
+    left: 928px;
+    top: 159px;
+    font-family: Adobe 黑体 std;
+    font-size: 30.45px;
+    background: linear-gradient(to right, rgb(0, 159, 241), rgb(0, 231, 208));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+#titlePin {
+    position: absolute;
+    left: 844px;
+    top: 202px;
+    font-family: Adobe 黑体 std;
+    font-size: 19.03px;
+    color: #00ccff;
+    /*letter-spacing: 0.4em;*/
+    margin-top: 8px;
+}
+
+#input {
+    width: 473px;
+    height: 327px;
+    background-image: url("../img/input_back.png");
+    position: absolute;
+    left: 801px;
+    top: 248px;
+    margin-top: 8px;
+}
+
+#input #identify {
+    font-family: "Adobe 黑体 std";
+    font-size: 22.49px;
+    color: #00ccff;
+    margin: 20px 0 0 180px;
+    background: transparent;
+    outline: none;
+    appearance: none;
+    border: 0;
+}
+
+#id_input {
+    position: absolute;
+    left: 43px;
+    top: 80px;
+    background-color: transparent;
+    width: 386px;
+    height: 42px;
+    background-image: url("../img/1.png");
+    text-indent: 4em;
+    color: white;
+    outline: none;
+}
+
+#password_input {
+    position: absolute;
+    left: 43px;
+    top: 142px;
+    background-color: transparent;
+    width: 386px;
+    height: 42px;
+    background-image: url("../img/2.png");
+    text-indent: 4em;
+    color: white;
+    outline: none;
+}
+
+#input input::-webkit-input-placeholder {
+    color: #ccccff;
+    text-indent: 4em;
+}
+
+#input span {
+    font-family: "Adobe 黑体 std";
+    font-size: 14.27px;
+    position: absolute;
+    top: 190px;
+    left: 63px;
+    color: white;
+}
+
+#input a {
+    font-family: "Adobe 黑体 std";
+    color: white;
+    font-size: 14.27px;
+    position: absolute;
+    top: 190px;
+    left: 367px;
+    text-decoration: none;
+}
+
+#confirm {
+    width: 387px;
+    height: 42px;
+    position: absolute;
+    left: 43px;
+    top: 237px;
+    background-color: #3399ff;
+    color: white;
+    font-family: "Adobe 黑体 std";
+    font-size: 20.36px;
+    line-height: 42px;
+    border-radius: 3px;
+    outline: none;
+}
+
+#confirm:hover {
+    cursor: pointer;
+}
+
+#header {
+    width: 1423px;
+    height: 810px;
+    background-image: url("../img/login_back.png");
+    background-repeat: no-repeat;
+}
+
+#pageFooter {
+    background-color: #444545;
+    color: white;
+    font-size: 12px;
+    height: 50px;
+    font-family: 微软雅黑;
+    line-height: 50px;
+    text-align: center;
+}

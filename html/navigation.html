@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+        <title>nav</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+        <link rel="stylesheet" href="../statics/css/custom.css"/>
+        <link rel="stylesheet" type="text/css" href="../statics/css/paper.css">
+        <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+        <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
+        <script>
+            var host = "http://47.101.33.252:4869"
+        </script>
+
+        <style>
+            #someButtons {
+                text-align: right;
+                float: right;
+            }
+
+            #toLast {
+                background-image: url("../statics/img/bank.png");
+                border: 1px solid black;
+                width: 50px;
+                height: 50px;
+                border-radius: 50px;
+                background-repeat: no-repeat;
+                background-position: center center;
+            }
+
+            #index {
+                background-image: url("../statics/img/index.png");
+                background-repeat: no-repeat;
+                background-position: center center;
+                border: 1px solid black;
+                width: 50px;
+                height: 50px;
+                border-radius: 50px;
+                margin-right: 30px;
+            }
+
+            #person {
+                background-image: url("../statics/img/personal.png");
+                background-repeat: no-repeat;
+                background-position: center center;
+                border: 1px solid black;
+                width: 50px;
+                height: 50px;
+                border-radius: 50px;
+                margin-right: 30px;
+            }
+
+            p {
+                float: left;
+            }
+
+            .clearfix::after, .clearfix::before {
+                content: "";
+                display: block;
+                clear: both;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="paper clearfix">
+            <p>Deluxe保险欢迎您</p>
+            <div id="someButtons">
+                <button id="person"></button>
+                <button id="index"></button>
+                <button id="toLast"></button>
+            </div>
+        </div>
+    </body>
+    <script>
+        $("#toLast").click(function () {
+            window.history.back(-1)
+        })
+
+        $.get({
+            url: host + "/api/user/me",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("Authorization", $.cookie("author"));
+            },
+            success: function (data) {
+                $("#userName").html(data.data.username)
+                $.cookie("userName", data.data.username)
+            }
+        })
+
+        $("#userName").click(function () {
+            let nameNew = prompt("请输入新用户名：")
+            if (nameNew === "") {
+                toastr.warning("用户名不能为空")
+            } else {
+                $.post({
+                    url: host + "/api/user/username",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", $.cookie("author"));
+                    },
+                    data: {
+                        username: nameNew,
+                    },
+                    success: function (data) {
+                        if (data.status === 10000) {
+                            $("#userName").html(nameNew)
+                            toastr.success("修改成功")
+                        } else {
+                            toastr.warning("修改失败")
+                        }
+                    },
+                    error: function () {
+                        alert("error")
+                    }
+                })
+            }
+        })
+    </script>
+</html>

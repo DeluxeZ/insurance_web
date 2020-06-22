@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <script>
+            var host = "http://127.0.0.1:8080/"
+        </script>
+        <meta charset="UTF-8"/>
+        <title>登陆</title>
+        <link rel="stylesheet" type="text/css" href="../statics/css/login.css"/>
+        <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+        <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+        <script type="text/javascript">
+            window.onload = function () {
+                $("#confirm").click(function () {
+                    var ide = $("#identify option:selected").val()
+                    var idCard = $("#id_input").val()
+                    var password = $("#password_input").val()
+                    if (ide === "customer") {
+                        var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                        if (reg.test(idCard) === false) {
+                            toastr.warning("请输入正确的身份证号！")
+                        } else if (password === "") {
+                            toastr.warning("请输入密码！")
+                        } else {
+                            $.post({
+                                url: host + "login/customer",
+                                data: {
+                                    idCard: idCard,
+                                    password: password
+                                },
+                                success: function (data) {
+                                    console.log(data)
+                                    if (data.status === "10000") {
+                                        toastr.warning("暂无该用户！")
+                                    } else if (data.status === "10001") {
+                                        toastr.success("正在登陆，请稍后...")
+                                        setTimeout(function () {//做延时以便显示登录状态值\
+                                            window.location.href = "index.html";//指向登录的页面地址
+                                        }, 1000)
+                                    } else {
+                                        toastr.error("密码错误，请重试！！")
+                                    }
+                                    // if (data.msg == "error") {
+                                    //     alert("该用户不存在")
+                                    // } else if (data.data.password != $("#password_input").val()) {
+                                    //     alert("密码错误请重试！！")
+                                    // } else {
+                                    //     $.cookie("name", data.data.name)
+                                    //     $.cookie("email", data.data.email)
+                                    //     $.cookie("phone", data.data.phone)
+                                    //     $.cookie("did", data.data.did)
+                                    //     $.cookie("gender", data.data.gender)
+                                    //     $.cookie("password", data.data.password)
+                                    //     $.cookie("status", data.data.status)
+                                    //     $.cookie("type", data.data.type)
+                                    //     $.cookie("pid", data.data.pid)
+                                    //     alert("欢迎您，" + data.data.name)
+                                    //     window.location.href = "index.html"
+                                    // }
+                                },
+                                error: function (data) {
+                                    alert("网络错误请重试！！！")
+                                }
+                            })
+                        }
+                    } else if (ide === "salesmen") {
+
+                    } else {
+                        
+                    }
+
+                    return false
+                })
+
+                document.onkeypress = function (event) {
+                    if (event.which == 13) {
+                        $("#confirm").click();
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div id="header">
+            <h3 id="title">Deluxe保险公司</h3>
+            <h4 id="titlePin">&emsp;INSURANCE COMPANIES OF DELUXE</h4>
+        </div>
+        <form id="input" method="post">
+            <select id="identify">
+                <option value="customer">用户登录</option>
+                <option value="salesmen">业务员登录</option>
+                <option value="admin">管理员登录</option>
+            </select>
+            <input type="text" id="id_input" autocomplete="off" placeholder="请输入身份证号"/>
+            <input type="password" id="password_input" autocomplete="new-password" placeholder="请输入密码"/>
+            <a href="#">去注册</a>
+            <button id="confirm">确&nbsp认</button>
+        </form>
+        <div id="pageFooter">
+            Copyright©2020 Deluxe 3017216029@tju.edu.cn
+        </div>
+    </body>
+</html>
