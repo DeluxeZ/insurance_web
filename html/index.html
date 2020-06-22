@@ -6,10 +6,20 @@
         <script src="../statics/js/jQuery.js"></script>
         <link rel="stylesheet" href="../statics/css/custom.css"/>
         <link rel="stylesheet" href="../statics/css/paper.css"/>
+        <style>
+            .clearfix::after, .clearfix::before {
+                content: "";
+                display: block;
+                clear: both;
+            }
+        </style>
     </head>
     <body>
-        <div class="container paper">
-            <h1>测试</h1>
+        <div class="container paper clearfix">
+            <div id="nav"></div>
+            <script>
+                $("#nav").load("navigation.html")
+            </script>
         </div>
     </body>
 </html>

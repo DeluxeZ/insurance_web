@@ -18,7 +18,7 @@
                     var idCard = $("#id_input").val()
                     var password = $("#password_input").val()
                     if (ide === "customer") {
-                        var reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                        let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
                         if (reg.test(idCard) === false) {
                             toastr.warning("请输入正确的身份证号！")
                         } else if (password === "") {
@@ -36,29 +36,15 @@
                                         toastr.warning("暂无该用户！")
                                     } else if (data.status === "10001") {
                                         toastr.success("正在登陆，请稍后...")
+                                        $.cookie("id", idCard)
+                                        $.cookie("ide", "customer")
                                         setTimeout(function () {//做延时以便显示登录状态值\
                                             window.location.href = "index.html";//指向登录的页面地址
                                         }, 1000)
                                     } else {
                                         toastr.error("密码错误，请重试！！")
                                     }
-                                    // if (data.msg == "error") {
-                                    //     alert("该用户不存在")
-                                    // } else if (data.data.password != $("#password_input").val()) {
-                                    //     alert("密码错误请重试！！")
-                                    // } else {
-                                    //     $.cookie("name", data.data.name)
-                                    //     $.cookie("email", data.data.email)
-                                    //     $.cookie("phone", data.data.phone)
-                                    //     $.cookie("did", data.data.did)
-                                    //     $.cookie("gender", data.data.gender)
-                                    //     $.cookie("password", data.data.password)
-                                    //     $.cookie("status", data.data.status)
-                                    //     $.cookie("type", data.data.type)
-                                    //     $.cookie("pid", data.data.pid)
-                                    //     alert("欢迎您，" + data.data.name)
-                                    //     window.location.href = "index.html"
-                                    // }
+
                                 },
                                 error: function (data) {
                                     alert("网络错误请重试！！！")
@@ -66,9 +52,59 @@
                             })
                         }
                     } else if (ide === "salesmen") {
-
+                        reg = /(^\d{11}$)/
+                        if (reg.test(idCard) === false) {
+                            toastr.warning("请输入正确的工号！")
+                        } else if (password === "") {
+                            toastr.warning("请输入密码！")
+                        } else {
+                            $.post({
+                                url: host + "login/salesmen",
+                                data: {
+                                    jobNumber: idCard,
+                                    password: password
+                                },
+                                success: function (data) {
+                                    console.log(data)
+                                    if (data.status === "10000") {
+                                        toastr.warning("暂无该业务员！")
+                                    } else if (data.status === "10001") {
+                                        toastr.success("正在登陆，请稍后...")
+                                        $.cookie("id", idCard)
+                                        $.cookie("ide", "customer")
+                                        setTimeout(function () {//做延时以便显示登录状态值\
+                                            window.location.href = "index.html";//指向登录的页面地址
+                                        }, 1000)
+                                    } else {
+                                        toastr.error("密码错误，请重试！！")
+                                    }
+                                },
+                                error: function (data) {
+                                    alert("网络错误请重试！！！")
+                                }
+                            })
+                        }
                     } else {
-                        
+                        if (idCard === ""){
+                            toastr.warning("请输入管理者号码！")
+                        } else if (password === ""){
+                            toastr.warning("请输入密码！")
+                        } else {
+                            $.post({
+                                url: host + "login/admin",
+                                data: {
+                                    account: idCard,
+                                    password: password
+                                },
+                                success:function (data) {
+                                    if (data === 1){
+                                        toastr.success("请稍后...")
+                                    } else {
+                                        toastr.error("对不起，您无权限")
+                                    }
+                                }
+                            })
+                        }
                     }
 
                     return false
@@ -95,7 +131,7 @@
             </select>
             <input type="text" id="id_input" autocomplete="off" placeholder="请输入身份证号"/>
             <input type="password" id="password_input" autocomplete="new-password" placeholder="请输入密码"/>
-            <a href="#">去注册</a>
+            <a href="signUp.html">去注册</a>
             <button id="confirm">确&nbsp认</button>
         </form>
         <div id="pageFooter">

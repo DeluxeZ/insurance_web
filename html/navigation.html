@@ -14,10 +14,11 @@
         <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
 
         <script>
-            var host = "http://47.101.33.252:4869"
+            var host = "http://127.0.0.1:8080"
         </script>
 
         <style>
+
             #someButtons {
                 text-align: right;
                 float: right;
@@ -58,66 +59,31 @@
             p {
                 float: left;
             }
-
-            .clearfix::after, .clearfix::before {
-                content: "";
-                display: block;
-                clear: both;
-            }
         </style>
     </head>
     <body>
-        <div class="paper clearfix">
             <p>Deluxe保险欢迎您</p>
             <div id="someButtons">
                 <button id="person"></button>
                 <button id="index"></button>
                 <button id="toLast"></button>
             </div>
-        </div>
     </body>
     <script>
         $("#toLast").click(function () {
             window.history.back(-1)
         })
 
-        $.get({
-            url: host + "/api/user/me",
-            beforeSend: function (xhr) {
-                xhr.setRequestHeader("Authorization", $.cookie("author"));
-            },
-            success: function (data) {
-                $("#userName").html(data.data.username)
-                $.cookie("userName", data.data.username)
+        $("#person").click(function () {
+            if ($.cookie("idCard") === "") {
+                window.location.href="login.html"
+            } else {
+
             }
         })
 
-        $("#userName").click(function () {
-            let nameNew = prompt("请输入新用户名：")
-            if (nameNew === "") {
-                toastr.warning("用户名不能为空")
-            } else {
-                $.post({
-                    url: host + "/api/user/username",
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", $.cookie("author"));
-                    },
-                    data: {
-                        username: nameNew,
-                    },
-                    success: function (data) {
-                        if (data.status === 10000) {
-                            $("#userName").html(nameNew)
-                            toastr.success("修改成功")
-                        } else {
-                            toastr.warning("修改失败")
-                        }
-                    },
-                    error: function () {
-                        alert("error")
-                    }
-                })
-            }
+        $("#index").click(function () {
+            window.location.href="index.html"
         })
     </script>
 </html>
