@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9ca9b2ec-e51c-48df-8729-0cf65e1bebcb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/html/signUp.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/signUp.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/navigation.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/navigation.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +62,7 @@
       <option name="presentableId" value="Default" />
       <updated>1592808954756</updated>
       <workItem from="1592808957342" duration="16991000" />
-      <workItem from="1592872277498" duration="2425000" />
+      <workItem from="1592872277498" duration="10077000" />
     </task>
     <servers />
   </component>
@@ -73,9 +74,9 @@
       <screen x="0" y="0" width="1440" height="920" />
     </state>
     <state x="451" y="207" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1440.920@0.0.1440.920" timestamp="1592814370499" />
-    <state x="383" y="195" width="672" height="678" key="search.everywhere.popup" timestamp="1592813851994">
+    <state x="383" y="195" width="672" height="678" key="search.everywhere.popup" timestamp="1592879945697">
       <screen x="0" y="0" width="1440" height="920" />
     </state>
-    <state x="383" y="195" width="672" height="678" key="search.everywhere.popup/0.0.1440.920@0.0.1440.920" timestamp="1592813851994" />
+    <state x="383" y="195" width="672" height="678" key="search.everywhere.popup/0.0.1440.920@0.0.1440.920" timestamp="1592879945697" />
   </component>
 </project>

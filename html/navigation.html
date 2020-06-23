@@ -18,7 +18,6 @@
         </script>
 
         <style>
-
             #someButtons {
                 text-align: right;
                 float: right;
@@ -59,15 +58,23 @@
             p {
                 float: left;
             }
+
+            .clearfix::after, .clearfix::before {
+                content: "";
+                display: block;
+                clear: both;
+            }
         </style>
     </head>
     <body>
+        <div class="clearfix" style="border-bottom: 2px solid rgb(60, 63, 65);">
             <p>Deluxe保险欢迎您</p>
             <div id="someButtons">
                 <button id="person"></button>
                 <button id="index"></button>
                 <button id="toLast"></button>
             </div>
+        </div>
     </body>
     <script>
         $("#toLast").click(function () {
@@ -76,14 +83,14 @@
 
         $("#person").click(function () {
             if ($.cookie("idCard") === "") {
-                window.location.href="login.html"
+                window.location.href = "login.html"
             } else {
 
             }
         })
 
         $("#index").click(function () {
-            window.location.href="index.html"
+            window.location.href = "index.html"
         })
     </script>
 </html>

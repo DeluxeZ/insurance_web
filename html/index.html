@@ -12,14 +12,173 @@
                 display: block;
                 clear: both;
             }
+
+            #sidebar {
+                float: left;
+                max-width: 19%;
+                border-right: 1px solid black;
+                padding: 10px;
+                height: 500px;
+            }
+
+            #container {
+                float: left;
+                width: 79%;
+                margin-left: 10px;
+            }
+
+            #insurance {
+                font-size: 16px;
+            }
+
+            #space {
+                font-size: 16px;
+            }
+
+            #container1 {
+                display: none;
+            }
+
+            .name {
+                width: 17%;
+            }
         </style>
+
+        <script>
+            var host = "http://127.0.0.1:8080"
+        </script>
     </head>
     <body>
         <div class="container paper clearfix">
-            <div id="nav"></div>
+            <div id="nav" class="clearfix"></div>
             <script>
                 $("#nav").load("navigation.html")
             </script>
+            <div style="margin-top: 30px">
+                <div id="sidebar">
+                    选择险种：
+                    <select id="insurance"></select><br/>
+                    我的空间：
+                    <select id="space">
+                        <option style='display: none'></option>
+                        <option value="purchased">已完成列表</option>
+                        <option value="reviewing">待审核列表</option>
+                        <option value="signing">待签字列表</option>
+                        <option value="confirming">待确认列表</option>
+                        <option value="all">所有</option>
+                    </select>
+                </div>
+                <div id="container">
+                    <div id="container1">
+                        <table id="info">
+                            <tr>
+                                <td class="name">险种名称：</td>
+                                <td id="iname"></td>
+                            </tr>
+                            <tr>
+                                <td class="name">承保年龄：</td>
+                                <td id="age"></td>
+                            </tr>
+                            <tr>
+                                <td class="name">保险利益：</td>
+                                <td id="benefit"></td>
+                            </tr>
+                            <tr>
+                                <td class="name">缴费方式：</td>
+                                <td id="payment"></td>
+                            </tr>
+                            <tr>
+                                <td class="name">保险费：</td>
+                                <td id="premium"></td>
+                            </tr>
+                            <tr>
+                                <td class="name">保险特点：</td>
+                                <td id="advantage"></td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <button id="purchase" style="float: right">去购买</button>
+                    </div>
+                    <div id="container2">
+
+                    </div>
+                </div>
+            </div>
         </div>
+        <script>
+            var getAge = function (index, array) {
+                let ageStart = array[index].ageStart
+                let ageEnd = array[index].ageEnd
+                let startArray = ageStart.split(".")
+                let endArray = ageEnd.split(".")
+                let yearStart = startArray[0]
+                let mouthStart = startArray[1]
+                let dayStart = startArray[2]
+                let yearEnd = endArray[0]
+                let mouthEnd = endArray[1]
+                let dayEnd = endArray[2]
+                return yearStart + "岁" + mouthStart + "月" + dayStart + "天~~" + yearEnd + "岁" + mouthEnd + "月" + dayEnd + "天"
+            }
+
+            var insurance = document.getElementById("insurance")
+            var insurances = []
+            var iname = document.getElementById("iname")
+            var age = document.getElementById("age")
+            var benefit = document.getElementById("benefit")
+            var payment = document.getElementById("payment")
+            var premium = document.getElementById("premium")
+            var advantage = document.getElementById("advantage")
+            $.post({
+                url: host + "/insurance/getInAll",
+                success: function (data) {
+                    insurance.innerHTML = ""
+                    insurances = data
+                    for (let i = 0; i < data.length; i++) {
+                        insurance.innerHTML += "<option value='" + data[i].id + "'>" + data[i].iname + "</option>"
+                    }
+
+                    iname.innerText = data[0].iname
+                    age.innerText = getAge(0, data)
+                    benefit.innerText = data[0].benefit
+                    payment.innerText = data[0].payment
+                    premium.innerText = data[0].premium
+                    advantage.innerText = data[0].advantage
+                }
+            })
+
+            $("#insurance").change(function () {
+                $("#container2").css("display", "none")
+                $("#container1").css("display", "block")
+                let id = parseInt($("#insurance option:selected").val()) - 1
+                iname.innerText = insurances[id].iname
+                age.innerText = getAge(id, insurances)
+                benefit.innerText = insurances[id].benefit
+                payment.innerText = insurances[id].payment
+                premium.innerText = insurances[id].premium
+                advantage.innerText = insurances[id].advantage
+            })
+
+            $("#space").change(function () {
+                $("#container1").css("display", "none")
+                $("#container2").css("display", "block")
+                let toShow = $("#space option:selected").val()
+                let status = 0
+                if ( toShow === "purchased") {
+                    status = 4
+                } else if (toShow === "reviewing") {
+                    status = 1
+                } else if (toShow === "signing" ) {
+                    status = 2
+                } else if (toShow === "confirming") {
+                    status = 3
+                } else {
+                    status = 5
+                }
+
+                $.post({
+                    
+                })
+            })
+        </script>
     </body>
 </html>
