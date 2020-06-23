@@ -217,7 +217,9 @@
 
             $("#purchase").click(function () {
                 let pid = parseInt($("#insurance option:selected").val())
+                let pName = $("#insurance option:selected").text()
                 $.cookie("pid", pid)
+                $.cookie("pName", pName)
                 window.location.href = "policy.html"
             })
 

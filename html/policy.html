@@ -14,20 +14,60 @@
 
         <script>
             host = "http://127.0.0.1:8080"
-            if ($.cookie("id") === undefined || $.cookie("id") === "") {
-                window.location.href = "login.html"
-            } else if ($.cookie("pid") === undefined || $.cookie("pid") === "") {
-                window.location.href = "index.html"
-            } else {
-                $.post({
-                    url: host + "/getInfo/customer",
-                    data: {
-                        idCard: $.cookie("id")
-                    },
-                    success: function (data) {
 
-                    }
-                })
+            function changeToGender(i) {
+                let gender
+                if (i === "0") {
+                    gender = "男☐女☑"
+                } else {
+                    gender = "男☑女☐"
+                }
+                return gender
+            }
+
+            function changeToDate(str) {
+                str = str.replace(/-/, "年")
+                str = str.replace(/-/, "月")
+                return str + "日"
+            }
+
+            window.onload = function () {
+                if ($.cookie("id") === undefined || $.cookie("id") === "") {
+                    window.location.href = "login.html"
+                } else if ($.cookie("pid") === undefined || $.cookie("pid") === "") {
+                    window.location.href = "index.html"
+                } else {
+                    $.post({
+                        url: host + "/getInfo/customer",
+                        data: {
+                            idCard: $.cookie("id")
+                        },
+                        success: function (data) {
+                            console.log(data)
+                            let gender = changeToGender(data.gender)
+
+                            $("#holder").html("<tr>" +
+                                "                    <td rowspan='3'>投<br/>保<br/>人</td>" +
+                                "                    <td>姓名：" + data.cname + "</td>" +
+                                "                    <td>性别：" + gender + "</td>" +
+                                "                    <td>出生日期：" + changeToDate(data.birthday) + "</td>" +
+                                "                </tr>" +
+                                "                <tr>" +
+                                "                    <td colspan='3'>身份证号：" + data.idCard + "</td>" +
+                                "                </tr>" +
+                                "                <tr id='unConfirmed'>" +
+                                "                    <td colspan='2' id='hAddress1'>联系地址：</td>" +
+                                "                    <td id='hZipCode1'>邮政编码：</td>" +
+                                "                </tr>"
+                            )
+                        },
+                        error: function () {
+                            toastr.error("网络错误请重试")
+                        }
+                    })
+
+                    $("#pName").html($.cookie("pName"))
+                }
             }
         </script>
         <style>
@@ -64,8 +104,7 @@
                 width: 40%;
                 height: 700px;
                 overflow: auto;
-                padding-left: 20px;
-                padding-top: 20px;
+                padding: 20px;
             }
 
             #display::-webkit-scrollbar {
@@ -82,6 +121,34 @@
             #display::-webkit-scrollbar-thumb:hover {
                 background-color: rgba(60, 63, 65, 0.8);
             }
+
+            #policy {
+                font-size: 16px;
+                border: 1px solid black;
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            #policy td {
+                border: 1px solid black;
+                height: 50px;
+            }
+
+            #pageFooter {
+                background-color: #444545;
+                color: white;
+                font-size: 12px;
+                height: 50px;
+                font-family: 微软雅黑;
+                line-height: 50px;
+                text-align: center;
+            }
+
+            .clearfix::after, .clearfix::before {
+                content: "";
+                display: block;
+                clear: both;
+            }
         </style>
     </head>
     <body>
@@ -89,41 +156,141 @@
         <script>
             $("#nav").load("navigation.html")
         </script>
-        <div id="form">
-            <div id="holder">
-                <h5>被保人信息</h5>
-                <p>姓名:<input type="text" id="aName"/></p>
-                <p>性别:
-                    <label><input type="radio" name="aGender" value="1" style="display: inline-block"/>男</label>
-                    <label><input type="radio" name="aGender" value="0" style="display: inline-block"/>女</label>
-                </p>
-                <p>出生日期:<input type="date" id="aBir"/></p>
-                <p>身份证号:<input type="text" id="aIdCard"/></p>
-                <p>联系地址:<input type="text" id="aAddress"/></p>
-                <p>邮政编码:<input type="text" id="aZipCode"/></p>
+        <div class="clearfix">
+            <div id="form">
+                <div>
+                    <h5>投保人信息：</h5>
+                    <p>联系地址：<input type="text" id="hAddress"/></p>
+                    <p>邮政编码：<input type="text" id="hZipCode"/></p>
+                </div>
                 <hr/>
+                <div id="assured">
+                    <h5>被保人信息</h5>
+                    <p>姓名：<input type="text" id="aName"/></p>
+                    <p>性别：
+                        <label><input type="radio" name="aGender" value="1" style="display: inline-block"/>男</label>
+                        <label><input type="radio" name="aGender" value="0" style="display: inline-block"/>女</label>
+                    </p>
+                    <p>出生日期：<input type="date" id="aBir"/></p>
+                    <p>身份证号：<input type="text" id="aIdCard"/></p>
+                    <p>联系地址：<input type="text" id="aAddress"/></p>
+                    <p>邮政编码：<input type="text" id="aZipCode"/></p>
+                </div>
+                <hr/>
+                <div id="matter">
+                    <h5>投保事项：</h5>
+                    <p>业务员姓名：<input type="text" id="sName"/></p>
+                    <p>业务员电话：<input type="text" id="sPhone"/></p>
+                    <p>受益人1姓名：<input type="text" id="bName1"/></p>
+                    <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label>
+                    </p>
+                    <p>受益人1身份证号：<input type="text" id="bIdCard1"/></p>
+                    <p>受益人2姓名：<input type="text" id="bName2"/></p>
+                    <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label>
+                    </p>
+                    <p>受益人2身份证号：<input type="text" id="bIdCard2"/></p>
+                </div>
             </div>
-            <div id="matter">
-                <h5>投保事项：</h5>
-                <p>业务员姓名：<input type="text" id="sName"/></p>
-                <p>业务员电话：<input type="text" id="sPhone"/></p>
-                <p>受益人1姓名：<input type="text" id="bName1"/></p>
-                <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label></p>
-                <p>受益人1身份证号：<input type="text" id="bIdCard1"/></p>
-                <p>受益人2姓名：<input type="text" id="bName2"/></p>
-                <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label></p>
-                <p>受益人2身份证号：<input type="text" id="bIdCard2"/></p>
+            <div id="display">
+                <h3>保单：</h3>
+                <p id="date"></p>
+                <script>
+                    var date = new Date()
+                    $("#date").html(date.getFullYear() + "年" + (parseInt(date.getMonth()) + 1) + "月" + date.getDate() + "日")
+                </script>
+                <table id="policy">
+                    <tbody id="holder"></tbody>
+                    <tbody id="insured">
+                    <tr>
+                        <td rowspan="3">被<br/>保<br/>人</td>
+                        <td id="aName1">姓名：</td>
+                        <td id="aGender1">性别</td>
+                        <td id="aBir1">出生日期：</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" id="aIdCard1">身份证：</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" id="aAddress1">联系地址：</td>
+                        <td id="aZipCode1">邮政编码：</td>
+                    </tr>
+                    </tbody>
+                    <tbody id="matters">
+                    <tr>
+                        <td rowspan="5">投<br/>保<br/>事<br/>项<br/></td>
+                        <td>险种名称：</td>
+                        <td>业务员姓名：</td>
+                        <td>业务员联系方式：</td>
+                    </tr>
+                    <tr>
+                        <td id="pName"></td>
+                        <td id="sName1"></td>
+                        <td id="sPhone1"></td>
+                    </tr>
+                    <tr>
+                        <td>身故受益人姓名：</td>
+                        <td>收益顺序：</td>
+                        <td>身份证号码：</td>
+                    </tr>
+                    <tr>
+                        <td id=bName11"></td>
+                        <td id="bNumber1"></td>
+                        <td id="bIdCard11"></td>
+                    </tr>
+                    <tr>
+                        <td id="bName21"></td>
+                        <td id="bNumber2"></td>
+                        <td id="bIdCard21"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div id="display">
-            <p id="date"></p>
-            <script>
-                var date = new Date()
-                $("#date").html(date.getFullYear() + "年" + (parseInt(date.getMonth()) + 1) + "月" + date.getDate() + "日")
-            </script>
-            <table>
+        <div id="pageFooter">
+            Copyright©2020 Deluxe 3017216029@tju.edu.cn
+        </div>
+        <script>
+            let aName = document.getElementById("aName")
+            let aName1 = document.getElementById("aName1")
+            let aBir = document.getElementById("aBir")
+            let aBir1 = document.getElementById("aBir1")
+            let aIdCard = document.getElementById("aIdCard")
+            let aIdCard1 = document.getElementById("aIdCard1")
+            let aAddress = document.getElementById("aAddress")
+            let aAddress1 = document.getElementById("aAddress1")
+            let aZipCode = document.getElementById("aZipCode")
+            let aZipCode1 = document.getElementById("aZipCode1")
+            let sName = document.getElementById("sName")
+            let sName1 = document.getElementById("sName1")
+            let sPhone = document.getElementById("sPhone")
+            let sPhone1 = document.getElementById("sPhone1")
+            let bName1 = document.getElementById("bName1")
+            let bName11 = document.getElementById("bName11")
+            let bName2 = document.getElementById("bName2")
+            let bName21 = document.getElementById("bName21")
+            let bIdCard1 = document.getElementById("bIdCard1")
+            let bIdCard11 = document.getElementById("bIdCard11")
+            let bIdCard2 = document.getElementById("bIdCard2")
+            let bIdCard21 = document.getElementById("bIdCard21")
+            function bind(input, td, str) {
+                input.onblur = function () {
+                    let i = input.value
+                    td.innerHTML = str + i
+                }
+            }
 
-            </table>
-        </div>
+            bind(aName, aName1, "姓名：")
+            bind(aBir, aBir1, "出生日期：")
+            bind(aIdCard, aIdCard1, "身份证号：")
+            bind(aAddress, aAddress1, "联系地址：")
+            bind(aZipCode, aZipCode1, "邮政编码：")
+            bind(sName, sName1, "")
+            bind(sPhone, sPhone1, "")
+            bind(bName1, bName11, "")
+            bind(bName2, bName21, "")
+            bind(bIdCard1, bIdCard11, "")
+            bind(bIdCard2, bIdCard21, "")
+
+        </script>
     </body>
 </html>
