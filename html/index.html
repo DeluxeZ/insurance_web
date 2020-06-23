@@ -2,8 +2,12 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
-        <script src="../statics/js/jQuery.js"></script>
+        <title>欢迎来到Deluxe保险</title>
+        <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+        <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
         <link rel="stylesheet" href="../statics/css/custom.css"/>
         <link rel="stylesheet" href="../statics/css/paper.css"/>
         <style>
@@ -35,22 +39,68 @@
                 font-size: 16px;
             }
 
-            #container1 {
+            #container2 {
                 display: none;
             }
 
             .name {
                 width: 17%;
             }
+
+            #pageFooter {
+                background-color: #444545;
+                color: white;
+                font-size: 12px;
+                height: 50px;
+                font-family: 微软雅黑;
+                line-height: 50px;
+                text-align: center;
+            }
+
+            .doSome {
+                color: black;
+                text-decoration: none;
+            }
+
+            .doSome:hover {
+                cursor: pointer;
+            }
         </style>
 
         <script>
             var host = "http://127.0.0.1:8080"
+
+            function operate(id, inner) {
+                if (inner === "待审核") {
+                    toastr.warning("请等待您的业务员审核")
+                } else if (inner === "待确认") {
+                    toastr.warning("请等待您的业务员确认")
+                } else if (inner === "已完成") {
+                    toastr.warning("该业务已完成")
+                } else {
+                    if (confirm("确认签名吗")) {
+                        $.post({
+                            url: host + "/policy/sign",
+                            data: {
+                                pid: id,
+                                status: 2
+                            },
+                            success: function (data) {
+                                if (data === 1) {
+                                    toastr.success("签名成功，请刷新")
+                                } else {
+                                    toastr.error("签名失败，请稍后重试")
+                                }
+                            }
+                        })
+                    }
+                }
+            }
         </script>
     </head>
     <body>
-        <div class="container paper clearfix">
-            <div id="nav" class="clearfix"></div>
+        <div class="clearfix">
+            <div id="nav" class="clearfix paper"></div>
             <script>
                 $("#nav").load("navigation.html")
             </script>
@@ -98,14 +148,38 @@
                         </table>
                         <br/>
                         <button id="purchase" style="float: right">去购买</button>
+                        <script>
+                            $("#purchase").click(function () {
+
+                            })
+                        </script>
                     </div>
                     <div id="container2">
-
+                        <table id="table" style="text-align: right">
+                            <th>单号</th>
+                            <th>保险类型</th>
+                            <th>投保人</th>
+                            <th>被保人</th>
+                            <th>业务员</th>
+                            <th>第一受益人</th>
+                            <th>状态</th>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+        <div id="pageFooter">
+            Copyright©2020 Deluxe 3017216029@tju.edu.cn
+        </div>
         <script>
+            var table = document.getElementById("table")
+            var tableHead = "<th>单号</th>" +
+                "<th>保险类型</th>" +
+                "<th>投保人</th>" +
+                "<th>被保人</th>" +
+                "<th>业务员</th>" +
+                "<th>第一受益人</th>" +
+                "<th>状态</th>"
             var getAge = function (index, array) {
                 let ageStart = array[index].ageStart
                 let ageEnd = array[index].ageEnd
@@ -159,15 +233,18 @@
             })
 
             $("#space").change(function () {
+                if ($.cookie("id") === "" || $.cookie("id") === undefined) {
+                    window.location.href = "login.html"
+                }
                 $("#container1").css("display", "none")
                 $("#container2").css("display", "block")
                 let toShow = $("#space option:selected").val()
                 let status = 0
-                if ( toShow === "purchased") {
+                if (toShow === "purchased") {
                     status = 4
                 } else if (toShow === "reviewing") {
                     status = 1
-                } else if (toShow === "signing" ) {
+                } else if (toShow === "signing") {
                     status = 2
                 } else if (toShow === "confirming") {
                     status = 3
@@ -176,7 +253,39 @@
                 }
 
                 $.post({
-                    
+                    url: host + "/policy/screen",
+                    data: {
+                        idCard: $.cookie("id"),
+                        status: status
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        table.innerHTML = tableHead
+                        for (let i = 0; i < data.length; i++) {
+                            let j
+                            if (data[i].status === 1) {
+                                j = "待审核"
+                            } else if (data[i].status === 2) {
+                                j = "待签字"
+                            } else if (data[i].status === 3) {
+                                j = "待确认"
+                            } else {
+                                j = "已完成"
+                            }
+                            table.innerHTML += "<tr>" +
+                                "<td>" + data[i].pid + "</td>" +
+                                "<td>" + data[i].iName + "</td>" +
+                                "<td>" + data[i].hName + "</td>" +
+                                "<td>" + data[i].aName + "</td>" +
+                                "<td>" + data[i].sName + "</td>" +
+                                "<td>" + data[i].bName1 + "</td>" +
+                                "<td><a class='doSome' id='" + data[i].pid + "' onclick='operate(this.id, this.innerHTML)'>" + j + "</a></td>" +
+                                "</tr>"
+                        }
+                    },
+                    error: function () {
+                        toastr.error("网络错误请重试！！")
+                    }
                 })
             })
         </script>
