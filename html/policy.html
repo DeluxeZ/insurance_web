@@ -3,8 +3,127 @@
     <head>
         <meta charset="UTF-8">
         <title>购买保险</title>
+
+        <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+        <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
+        <link rel="stylesheet" href="../statics/css/custom.css"/>
+        <link rel="stylesheet" href="../statics/css/paper.css"/>
+
+        <script>
+            host = "http://127.0.0.1:8080"
+            if ($.cookie("id") === undefined || $.cookie("id") === "") {
+                window.location.href = "login.html"
+            } else if ($.cookie("pid") === undefined || $.cookie("pid") === "") {
+                window.location.href = "index.html"
+            } else {
+                $.post({
+                    url: host + "/getInfo/customer",
+                    data: {
+                        idCard: $.cookie("id")
+                    },
+                    success: function (data) {
+
+                    }
+                })
+            }
+        </script>
+        <style>
+            #form input {
+                display: inline-block;
+            }
+
+            #form {
+                float: left;
+                width: 50%;
+                height: 700px;
+                overflow: auto;
+                padding-left: 30px;
+                padding-top: 20px;
+            }
+
+            #form::-webkit-scrollbar {
+                background: transparent;
+                width: 7px;
+                border-radius: 5px;
+            }
+
+            #form::-webkit-scrollbar-thumb {
+                background-color: rgba(60, 63, 65, 0.4);
+                border-radius: 5px;
+            }
+
+            #form::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(60, 63, 65, 0.8);
+            }
+
+            #display {
+                float: left;
+                width: 40%;
+                height: 700px;
+                overflow: auto;
+                padding-left: 20px;
+                padding-top: 20px;
+            }
+
+            #display::-webkit-scrollbar {
+                background: transparent;
+                width: 7px;
+                border-radius: 5px;
+            }
+
+            #display::-webkit-scrollbar-thumb {
+                background-color: rgba(60, 63, 65, 0.4);
+                border-radius: 5px;
+            }
+
+            #display::-webkit-scrollbar-thumb:hover {
+                background-color: rgba(60, 63, 65, 0.8);
+            }
+        </style>
     </head>
     <body>
-        
+        <div id="nav" class="clearfix paper"></div>
+        <script>
+            $("#nav").load("navigation.html")
+        </script>
+        <div id="form">
+            <div id="holder">
+                <h5>被保人信息</h5>
+                <p>姓名:<input type="text" id="aName"/></p>
+                <p>性别:
+                    <label><input type="radio" name="aGender" value="1" style="display: inline-block"/>男</label>
+                    <label><input type="radio" name="aGender" value="0" style="display: inline-block"/>女</label>
+                </p>
+                <p>出生日期:<input type="date" id="aBir"/></p>
+                <p>身份证号:<input type="text" id="aIdCard"/></p>
+                <p>联系地址:<input type="text" id="aAddress"/></p>
+                <p>邮政编码:<input type="text" id="aZipCode"/></p>
+                <hr/>
+            </div>
+            <div id="matter">
+                <h5>投保事项：</h5>
+                <p>业务员姓名：<input type="text" id="sName"/></p>
+                <p>业务员电话：<input type="text" id="sPhone"/></p>
+                <p>受益人1姓名：<input type="text" id="bName1"/></p>
+                <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label></p>
+                <p>受益人1身份证号：<input type="text" id="bIdCard1"/></p>
+                <p>受益人2姓名：<input type="text" id="bName2"/></p>
+                <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label></p>
+                <p>受益人2身份证号：<input type="text" id="bIdCard2"/></p>
+            </div>
+        </div>
+        <div id="display">
+            <p id="date"></p>
+            <script>
+                var date = new Date()
+                $("#date").html(date.getFullYear() + "年" + (parseInt(date.getMonth()) + 1) + "月" + date.getDate() + "日")
+            </script>
+            <table>
+
+            </table>
+        </div>
     </body>
 </html>

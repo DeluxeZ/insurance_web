@@ -148,11 +148,6 @@
                         </table>
                         <br/>
                         <button id="purchase" style="float: right">去购买</button>
-                        <script>
-                            $("#purchase").click(function () {
-
-                            })
-                        </script>
                     </div>
                     <div id="container2">
                         <table id="table" style="text-align: right">
@@ -218,6 +213,12 @@
                     premium.innerText = data[0].premium
                     advantage.innerText = data[0].advantage
                 }
+            })
+
+            $("#purchase").click(function () {
+                let pid = parseInt($("#insurance option:selected").val())
+                $.cookie("pid", pid)
+                window.location.href = "policy.html"
             })
 
             $("#insurance").change(function () {
