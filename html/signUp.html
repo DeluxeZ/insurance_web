@@ -9,6 +9,9 @@
         <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
         <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
         <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+        <script>
+            var host = "http://127.0.0.1:8080/"
+        </script>
 
         <style>
             .clearfix::after, .clearfix::before {
@@ -24,14 +27,15 @@
                 <p>身份证号:<input type="text" id="idCard"/></p>
                 <p>密码:<input type="password" id="password"/></p>
                 <p>确认密码:<input type="password" id="rePass"/></p>
+                <p>电话号码:<input type="text" id="phone"/></p>
                 <p>出生日期:<input type="date" id="date"/></p>
                 <p>姓名:<input type="text" id="name"/></p>
                 <p>性别:
                     <label><input type="radio" name="gender" value="1" style="display: inline-block"/>男</label>
                     <label><input type="radio" name="gender" value="0" style="display: inline-block"/>女</label>
                 </p>
-                <button id="submit">注&emsp;册</button>
-                <button id="return">返&emsp;回</button>
+                <input type="button" id="submit" value="注&emsp;册" style="display: inline-block"/>
+                <input type="button" id="return" value="返&emsp;回" style="display: inline-block"/>
             </form>
         </div>
         <script>
@@ -46,6 +50,43 @@
                 let birthday = $("#date").val()
                 let name = $("#name").val()
                 let gender = $("input[name='gender']:checked").val()
+                let phone = $("#phone").val()
+                let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                if (reg.test(idCard) === false) {
+                    toastr.warning("请输入正确的身份证号！")
+                } else if (password !== rePass) {
+                    toastr.warning("密码不一致，请修改");
+                } else if (birthday === "") {
+                    toastr.warning("请选择出生日期！")
+                } else if (name === "") {
+                    toastr.warning("请输入您的姓名！")
+                } else if (name.length >= 20) {
+                    toastr.warning("您的姓名不符合规范！")
+                } else if (gender === undefined) {
+                    toastr.warning("请选择您的性别！")
+                } else {
+                    $.post({
+                        url: host + "update/signUp",
+                        data: {
+                            idCard: idCard,
+                            password: password,
+                            phone: phone,
+                            birthday: birthday,
+                            cname: name,
+                            gender: gender
+                        },
+                        success: function (data) {
+                            if (data.status === "10003") {
+                                toastr.success("注册成功，请返回登陆！")
+                            } else {
+                                toastr.error("该账号已注册！")
+                            }
+                        },
+                        error:function () {
+                            toastr.error("网络错误请重试！！")
+                        }
+                    })
+                }
                 return false
             })
         </script>
