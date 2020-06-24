@@ -85,12 +85,24 @@
             if ($.cookie("id") === "") {
                 window.location.href = "login.html"
             } else {
-                window.location.href = "person.html"
+                if ($.cookie("ide") === "customer") {
+                    window.location.href = "person.html"
+                } else if ($.cookie("ide") === "salesmen") {
+                    window.location.href = "salesmenInfo.html"
+                } else {
+                    toastr.error("error")
+                }
             }
         })
 
         $("#index").click(function () {
-            window.location.href = "index.html"
+            if ($.cookie("ide") === "customer") {
+                window.location.href = "index.html"
+            } else if ($.cookie("ide") === "salesmen") {
+                window.location.href = "salesmen.html"
+            } else {
+                toastr.error("error")
+            }
         })
     </script>
 </html>

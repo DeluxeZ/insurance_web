@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>个人中心</title>
+        <title>业务员中心</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
         <meta name="renderer" content="webkit">
         <meta property="qc:admins" content="77103107776157736375"/>
@@ -28,20 +28,21 @@
         <script>
             var host = "http://127.0.0.1:8080"
             window.onload = function () {
-                if ($.cookie("id") === "" || $.cookie("id") === undefined || $.cookie("ide") === "salesmen") {
+                if ($.cookie("id") === "" || $.cookie("id") === undefined || $.cookie("ide") === "customer") {
                     window.location.href = "login.html"
                 }
                 $.post({
-                    url: host + "/getInfo/customer",
+                    url: host + "/getInfo/salesmen",
                     data: {
-                        idCard: $.cookie("id")
+                        jobNumber: $.cookie("id")
                     },
                     success: function (data) {
-                        $("#name").val(data.cname)
+                        console.log(data)
+                        $("#name").val(data.sname)
                         $("#idCard").val(data.idCard)
+                        $("#jobNumber").val(data.jobNumber)
                         $("input[type=radio][name='gender'][value=" + data.gender + "]").attr("checked", true);
                         $("#phone").val(data.phone)
-
                     }
                 })
             }
@@ -60,7 +61,7 @@
                         <p>个人设置</p>
                     </div>
                 </div>
-                <div class="setting pb10">
+                <div class="setting pb10" style="height: 650px">
                     <div class="nav-tabs pa">
                         <h class="baseinfo fl active">基本信息</h>
                         <div class="cb"></div>
@@ -87,12 +88,21 @@
                                                    placeholder="请输入姓名"/>
                                             <p class="rlf-tip-wrap errorHint color-red"></p>
                                         </div>
-
                                     </div>
                                     <div class="wlfg-wrap clearfix">
                                         <label class="label-name" for="idCard">身份证号：</label>
                                         <div class="rlf-group profile-address">
                                             <input type="text" name="pid" id="idCard" autocomplete="off"
+                                                   data-validate="require-nick" class="moco-form-control"
+                                                   value="000000" readonly="true"/>
+                                            <div class="cb"></div>
+                                            <p class="rlf-tip-wrap errorHint color-red"></p>
+                                        </div>
+                                    </div>
+                                    <div class="wlfg-wrap clearfix">
+                                        <label class="label-name" for="idCard">工号：</label>
+                                        <div class="rlf-group profile-address">
+                                            <input type="text" name="pid" id="jobNumber" autocomplete="off"
                                                    data-validate="require-nick" class="moco-form-control"
                                                    value="000000" readonly="true"/>
                                             <div class="cb"></div>
@@ -146,10 +156,10 @@
                     toastr.warning("请输入正确的手机号码")
                 } else {
                     $.post({
-                        url: host + "/update/change",
+                        url: host + "/update/renew",
                         data: {
-                            idCard: $.cookie("id"),
-                            name: $("#name").val(),
+                            jobNumber: $.cookie("id"),
+                            sname: $("#name").val(),
                             gender: $("input[name='gender']:checked").val(),
                             phone: $("#phone").val()
                         },
