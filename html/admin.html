@@ -26,17 +26,82 @@
                 line-height: 50px;
                 text-align: center;
             }
+
+            #navigation {
+                list-style-type: none;
+                background-color: rgb(240, 240, 240);
+                height: 50px;
+            }
+
+            #navigation li {
+                margin-right: 30px;
+                float: left;
+                line-height: 50px;
+                padding: 0 20px 0 20px;
+            }
+
+            #navigation li:hover {
+                cursor: pointer;
+                background-color: rgb(70, 70, 70);
+                color: white;
+            }
+
+            #display {
+                width: 4590px;
+                position: relative;
+                transition: 1s;
+            }
+
+            .content {
+                float: left;
+                width: 918px;
+                height: 500px;
+            }
+
+            #content1 {
+                background-color: red;
+            }
+
+            #content2 {
+                background-color: yellow;
+            }
         </style>
     </head>
     <body>
-        <div id="container">
-            <div id="nav" class="clearfix paper"></div>
-            <script>
-                $("#nav").load("navigation.html")
-            </script>
+        <div class="container paper clearfix" style="padding: 1rem">
+            <div id="nav" class="clearfix paper" style="padding: 1rem">
+                <h3>这里是Deluxe保险的管理区域</h3>
+            </div>
+            <ul id="navigation" class="clearfix">
+                <li>险种查询</li>
+                <li>业务员查询</li>
+                <li>保单查询</li>
+                <li>增加险种</li>
+                <li>增加业务员</li>
+            </ul>
+            <div style="overflow-x: hidden">
+                <div id="display">
+                    <div id="content1" class="content">
+                    </div>
+                    <div id="content2" class="content">
+                    </div>
+                    <div id="content3" class="content"></div>
+                    <div id="content4" class="content"></div>
+                    <div id="content5" class="content"></div>
+                </div>
+            </div>
+            <br/>
             <div id="pageFooter">
                 Copyright©2020 Deluxe 3017216029@tju.edu.cn
             </div>
         </div>
+        <script>
+            var display = document.getElementById("display")
+            $("#navigation li").click(function () {
+                let pos = $(this).index()
+                $("#display").css("left", - pos * 918 + "px")
+            })
+
+        </script>
     </body>
 </html>

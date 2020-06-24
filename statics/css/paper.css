@@ -3,14 +3,12 @@
     font-family: 'Neucha';
     font-style: normal;
     font-weight: 400;
-    src: local('Neucha'), url(./q5uGsou0JOdh94bfvQlo.ttf) format('truetype');
 }
 
 @font-face {
     font-family: 'Patrick Hand SC';
     font-style: normal;
     font-weight: 400;
-    src: local('Patrick Hand SC'), local('PatrickHandSC-Regular'), url(./0nkwC9f7MfsBiWcLtY65AWDK873ljiK-.ttf) format('truetype');
 }
 
 .text-primary {
@@ -924,15 +922,6 @@ ol ol ol ol ol {
     list-style-type: lower-roman
 }
 
-ul {
-    list-style: none;
-    margin-left: 0
-}
-
-ul li::before {
-    content: "-"
-}
-
 ul li {
     text-indent: -7px
 }
@@ -943,27 +932,6 @@ ul li [popover-left]::after,
 ul li [popover-right]::after,
 ul li [popover-top]::after {
     text-indent: 0
-}
-
-ul li::before {
-    left: -7px;
-    position: relative
-}
-
-ul ul li::before {
-    content: "+"
-}
-
-ul ul ul li::before {
-    content: "~"
-}
-
-ul ul ul ul li::before {
-    content: "⤍"
-}
-
-ul ul ul ul ul li::before {
-    content: "⁎"
 }
 
 ul.inline li {
