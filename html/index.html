@@ -216,10 +216,10 @@
             })
 
             $("#purchase").click(function () {
-                let pid = parseInt($("#insurance option:selected").val())
-                let pName = $("#insurance option:selected").text()
-                $.cookie("pid", pid)
-                $.cookie("pName", pName)
+                let iId = parseInt($("#insurance option:selected").val())
+                let iName = $("#insurance option:selected").text()
+                $.cookie("iId", iId)
+                $.cookie("iName", iName)
                 window.location.href = "policy.html"
             })
 

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>个人中心</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+        <meta name="renderer" content="webkit">
+        <meta property="qc:admins" content="77103107776157736375"/>
+        <meta property="wb:webmaster" content="c4f857219bfae3cb"/>
+        <script src="https://cdn.staticfile.org/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://cdn.staticfile.org/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+        <script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css">
+
+        <link rel="stylesheet" href="../statics/css/base.css" type="text/css"/>
+        <link rel="stylesheet" href="../statics/css/common-less(1).css" type="text/css"/>
+        <link rel="stylesheet" href="../statics/css/moco.min.css" type="text/css"/>
+        <link rel="stylesheet" href="../statics/css/common-less.css" type="text/css"/>
+        <link rel="stylesheet" href="../statics/css/profile-less.css" type="text/css"/>
+
+        <style>
+            .clearfix::after, .clearfix::before {
+                content: "";
+                display: block;
+                clear: both;
+            }
+        </style>
+        <script>
+            var host = "http://127.0.0.1:8080"
+            window.onload = function () {
+                if ($.cookie("id") === "" || $.cookie("id") === undefined) {
+                    window.location.href = "login.html"
+                }
+                console.log($.cookie("id"))
+                $.post({
+                    url: host + "/getInfo/customer",
+                    data: {
+                        idCard: $.cookie("id")
+                    },
+                    success: function (data) {
+                        $("#name").val(data.cname)
+                        $("#idCard").val(data.idCard)
+                        $("input[type=radio][name='gender'][value=" + data.gender + "]").attr("checked", true);
+                        $("#phone").val(data.phone)
+
+                    }
+                })
+            }
+        </script>
+    </head>
+    <body>
+        <div id="header" class="clearfix paper"></div>
+        <script>
+            $("#header").load("navigation.html")
+        </script>
+
+        <div id="main">
+            <div class="page-settings">
+                <div class="top">
+                    <div class="w960 mauto top_title">
+                        <p>个人设置</p>
+                    </div>
+                </div>
+                <div class="setting pb10">
+                    <div class="nav-tabs pa">
+                        <h class="baseinfo fl active">基本信息</h>
+                        <div class="cb"></div>
+                    </div>
+                    <div class="contentBox">
+                        <div class="formBox" id="base_info">
+                            <div id="setting-profile" class="setting-wrap setting-profile">
+                                <div class="wlfg-wrap clearfix ">
+                                    <label class="label-name">图片：</label>
+                                    <div class="rlf-group">
+                                        <img class="fl avator-img" id="js-portrait"
+                                             src="../statics/img/personal.png"
+                                             data-portrait="58492fe600012e8e01800180" width="180" height="180">
+                                        <div class="cb"></div>
+                                        <p class="rlf-tip-wrap errorHint color-red"></p>
+                                    </div>
+                                </div>
+                                <form id="profile">
+                                    <div class="wlfg-wrap clearfix">
+                                        <label class="label-name" for="name">姓名：</label>
+                                        <div class="rlf-group">
+                                            <input type="text" name="name" id="name" autocomplete="off"
+                                                   data-validate="require-nick" class="moco-form-control"
+                                                   placeholder="请输入姓名"/>
+                                            <p class="rlf-tip-wrap errorHint color-red"></p>
+                                        </div>
+
+                                    </div>
+                                    <div class="wlfg-wrap clearfix">
+                                        <label class="label-name" for="idCard">身份证号：</label>
+                                        <div class="rlf-group profile-address">
+                                            <input type="text" name="pid" id="idCard" autocomplete="off"
+                                                   data-validate="require-nick" class="moco-form-control"
+                                                   value="000000" readonly="true"/>
+                                            <div class="cb"></div>
+                                            <p class="rlf-tip-wrap errorHint color-red"></p>
+                                        </div>
+                                    </div>
+                                    <div class="wlfg-wrap clearfix">
+                                        <label class="label-name h16 lh16">性别：</label>
+                                        <div class="rlf-group rlf-radio-group">
+                                            <label class="lh16"><input type="radio" hidefocus="true" value="1"
+                                                                       style="display: inline-block"
+                                                                       name="gender">男</label>
+                                            <label class="lh16"><input type="radio" hidefocus="true" value="0"
+                                                                       style="display: inline-block"
+                                                                       name="gender">女</label>
+                                            <p class="rlf-tip-wrap errorHint color-red"></p>
+                                        </div>
+                                    </div>
+                                    <div class="wlfg-wrap clearfix">
+                                        <label class="label-name">电话：</label>
+                                        <div class="rlf-group profile-address">
+                                            <input type="text" name="phone" id="phone" autocomplete="off"
+                                                   data-validate="require-nick" class="moco-form-control"
+                                                   value="00000000000" placeholder="请输入手机号码"/>
+                                            <div class="cb"></div>
+                                            <p class="rlf-tip-wrap errorHint color-red"></p>
+                                        </div>
+                                    </div>
+                                    <div class="wlfg-wrap clearfix">
+                                        <label class="label-name" for="profile-submit"></label>
+                                        <div class="rlf-group">
+                                            <span id="profile-submit" hidefocus="true" aria-role="button"
+                                                  class="rlf-btn-green btn-block profile-btn">保存</span>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="pageFooter">
+            Copyright©2019 Deluxe 3017216029@tju.edu.cn
+        </div>
+        <script>
+            $("#profile-submit").click(function () {
+                let phone = $("#phone").val()
+                let reg = /^1[3456789]\d{9}$/
+                if (reg.test(phone) === false) {
+                    toastr.warning("请输入正确的手机号码")
+                } else {
+                    $.post({
+                        url: host + "/update/change",
+                        data: {
+                            idCard: $.cookie("id"),
+                            name: $("#name").val(),
+                            gender: $("input[name='gender']:checked").val(),
+                            phone: $("#phone").val()
+                        },
+                        success: function (data) {
+                            if (data === 1) {
+                                toastr.success("更改成功！")
+                            } else {
+                                toastr.waring("更新失败，请稍后重试！")
+                            }
+                        },
+                        error: function () {
+                            toastr.error("网络错误，请稍后重试")
+                        }
+                    })
+                }
+            })
+        </script>
+    </body>
+</html>

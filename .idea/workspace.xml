@@ -4,6 +4,7 @@
     <list default="true" id="9ca9b2ec-e51c-48df-8729-0cf65e1bebcb" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/html/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/html/navigation.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/navigation.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/html/policy.html" beforeDir="false" afterPath="$PROJECT_DIR$/html/policy.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,17 +39,17 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/statics/img" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\img" />
-      <recent name="D:\Deluxe\study\software engineering\insurance_web\html" />
-      <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\css" />
-      <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\js" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\img" />
       <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\css" />
       <recent name="D:\Deluxe\study\software engineering\insurance_web\html" />
       <recent name="D:\Deluxe\study\software engineering\insurance_web\statics" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\img" />
+      <recent name="D:\Deluxe\study\software engineering\insurance_web\html" />
+      <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\css" />
+      <recent name="D:\Deluxe\study\software engineering\insurance_web\statics\js" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -63,6 +64,7 @@
       <updated>1592808954756</updated>
       <workItem from="1592808957342" duration="16991000" />
       <workItem from="1592872277498" duration="28614000" />
+      <workItem from="1592956983313" duration="14140000" />
     </task>
     <servers />
   </component>

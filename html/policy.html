@@ -13,7 +13,16 @@
         <link rel="stylesheet" href="../statics/css/paper.css"/>
 
         <script>
-            host = "http://127.0.0.1:8080"
+            var host = "http://127.0.0.1:8080"
+            var confirmed
+            var value = {
+                "iId": "", "date": "", "iName": "",
+                "hName": "", "hGender": "", "hBir": "", "hIdCard": "", "hAddress": "", "hZipCode": "",
+                "aName": "", "aGender": "", "aBir": "", "aIdCard": "", "aAddress": "", "aZipCode": "",
+                "jobNumber": "", "sName": "", "sPhone": "",
+                "bName1": "", "bNumber1": "", "bIdCard1": "",
+                "bName2": "", "bNumber2": "", "bIdCard2": ""
+            }
 
             function changeToGender(i) {
                 let gender
@@ -43,21 +52,26 @@
                             idCard: $.cookie("id")
                         },
                         success: function (data) {
-                            console.log(data)
-                            let gender = changeToGender(data.gender)
+                            value["hName"] = data.cname
+                            value["hGender"] = data.gender
+                            value["hBir"] = data.birthday
+                            value["hIdCard"] = data.idCard
 
-                            $("#holder").html("<tr>" +
-                                "                    <td rowspan='3'>投<br/>保<br/>人</td>" +
-                                "                    <td>姓名：" + data.cname + "</td>" +
-                                "                    <td>性别：" + gender + "</td>" +
-                                "                    <td>出生日期：" + changeToDate(data.birthday) + "</td>" +
-                                "                </tr>" +
+                            let gender = changeToGender(data.gender)
+                            confirmed = "<tr>" +
+                                "<td rowspan='3'>投<br/><br/>保<br/><br/>人</td>" +
+                                "<td>姓名：" + data.cname + "</td>" +
+                                "<td>性别：" + gender + "</td>" +
+                                "<td>出生日期：" + changeToDate(data.birthday) + "</td>" +
+                                "</tr>" +
+                                "<tr>" +
+                                "<td colspan='3'>身份证号：" + data.idCard + "</td>" +
+                                "</tr>"
+
+                            $("#holder").html(confirmed +
                                 "                <tr>" +
-                                "                    <td colspan='3'>身份证号：" + data.idCard + "</td>" +
-                                "                </tr>" +
-                                "                <tr id='unConfirmed'>" +
-                                "                    <td colspan='2' id='hAddress1'>联系地址：</td>" +
-                                "                    <td id='hZipCode1'>邮政编码：</td>" +
+                                "                    <td colspan='2'>联系地址：</td>" +
+                                "                    <td>邮政编码：</td>" +
                                 "                </tr>"
                             )
                         },
@@ -101,7 +115,7 @@
 
             #display {
                 float: left;
-                width: 40%;
+                width: 50%;
                 height: 700px;
                 overflow: auto;
                 padding: 20px;
@@ -149,6 +163,12 @@
                 display: block;
                 clear: both;
             }
+
+            #Buttons {
+                margin-top: 10px;
+                margin-bottom: 30px;
+                margin-left: 70%;
+            }
         </style>
     </head>
     <body>
@@ -159,13 +179,13 @@
         <div class="clearfix">
             <div id="form">
                 <div>
-                    <h5>投保人信息：</h5>
+                    <h3>投保人信息：</h3>
                     <p>联系地址：<input type="text" id="hAddress"/></p>
                     <p>邮政编码：<input type="text" id="hZipCode"/></p>
                 </div>
                 <hr/>
                 <div id="assured">
-                    <h5>被保人信息</h5>
+                    <h3>被保人信息</h3>
                     <p>姓名：<input type="text" id="aName"/></p>
                     <p>性别：
                         <label><input type="radio" name="aGender" value="1" style="display: inline-block"/>男</label>
@@ -178,15 +198,28 @@
                 </div>
                 <hr/>
                 <div id="matter">
-                    <h5>投保事项：</h5>
-                    <p>业务员姓名：<input type="text" id="sName"/></p>
+                    <h3>投保事项：</h3>
+                    <p>业务员姓名：<select id="sName" style="font-size: 18px; display: inline-block">
+                        <option style='display: none'></option>
+                    </select></p>
+                    <script>
+                        $.post({
+                            url: host + "/query/salesList",
+                            success: function (data) {
+                                let sName = document.getElementById("sName")
+                                for (let i = 0; i < data.length; i++) {
+                                    sName.innerHTML += "<option value='" + data[i].jobNumber + "'>" + data[i].sname + "</option>"
+                                }
+                            }
+                        })
+                    </script>
                     <p>业务员电话：<input type="text" id="sPhone"/></p>
                     <p>受益人1姓名：<input type="text" id="bName1"/></p>
                     <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label>
                     </p>
                     <p>受益人1身份证号：<input type="text" id="bIdCard1"/></p>
                     <p>受益人2姓名：<input type="text" id="bName2"/></p>
-                    <p>优先收益：<label><input type="radio" name="bNumber" value="1" style="display: inline-block"/>是</label>
+                    <p>优先收益：<label><input type="radio" name="bNumber" value="2" style="display: inline-block"/>是</label>
                     </p>
                     <p>受益人2身份证号：<input type="text" id="bIdCard2"/></p>
                 </div>
@@ -196,15 +229,16 @@
                 <p id="date"></p>
                 <script>
                     var date = new Date()
+                    value["date"] = date.getFullYear() + "-" + (parseInt(date.getMonth()) + 1) + "-" + date.getDate()
                     $("#date").html(date.getFullYear() + "年" + (parseInt(date.getMonth()) + 1) + "月" + date.getDate() + "日")
                 </script>
                 <table id="policy">
                     <tbody id="holder"></tbody>
                     <tbody id="insured">
                     <tr>
-                        <td rowspan="3">被<br/>保<br/>人</td>
+                        <td rowspan="3">被<br/><br/>保<br/><br/>人</td>
                         <td id="aName1">姓名：</td>
-                        <td id="aGender1">性别</td>
+                        <td id="aGender1">性别：男☐女☐</td>
                         <td id="aBir1">出生日期：</td>
                     </tr>
                     <tr>
@@ -217,7 +251,7 @@
                     </tbody>
                     <tbody id="matters">
                     <tr>
-                        <td rowspan="5">投<br/>保<br/>事<br/>项<br/></td>
+                        <td rowspan="5">投<br/><br/>保<br/><br/>事<br/><br/>项<br/><br/></td>
                         <td>险种名称：</td>
                         <td>业务员姓名：</td>
                         <td>业务员联系方式：</td>
@@ -229,11 +263,11 @@
                     </tr>
                     <tr>
                         <td>身故受益人姓名：</td>
-                        <td>收益顺序：</td>
+                        <td>受益顺序：</td>
                         <td>身份证号码：</td>
                     </tr>
                     <tr>
-                        <td id=bName11"></td>
+                        <td id="bName11"></td>
                         <td id="bNumber1"></td>
                         <td id="bIdCard11"></td>
                     </tr>
@@ -244,6 +278,10 @@
                     </tr>
                     </tbody>
                 </table>
+            </div>
+            <div id="Buttons">
+                <button id="reset" style="margin-right: 20px">重&emsp;置</button>
+                <button id="submit">提&emsp;交</button>
             </div>
         </div>
         <div id="pageFooter">
@@ -260,8 +298,6 @@
             let aAddress1 = document.getElementById("aAddress1")
             let aZipCode = document.getElementById("aZipCode")
             let aZipCode1 = document.getElementById("aZipCode1")
-            let sName = document.getElementById("sName")
-            let sName1 = document.getElementById("sName1")
             let sPhone = document.getElementById("sPhone")
             let sPhone1 = document.getElementById("sPhone1")
             let bName1 = document.getElementById("bName1")
@@ -272,25 +308,116 @@
             let bIdCard11 = document.getElementById("bIdCard11")
             let bIdCard2 = document.getElementById("bIdCard2")
             let bIdCard21 = document.getElementById("bIdCard21")
-            function bind(input, td, str) {
+
+            function bind(input, td, str, str1) {
                 input.onblur = function () {
                     let i = input.value
                     td.innerHTML = str + i
+                    value[str1] = i
                 }
             }
 
-            bind(aName, aName1, "姓名：")
-            bind(aBir, aBir1, "出生日期：")
-            bind(aIdCard, aIdCard1, "身份证号：")
-            bind(aAddress, aAddress1, "联系地址：")
-            bind(aZipCode, aZipCode1, "邮政编码：")
-            bind(sName, sName1, "")
-            bind(sPhone, sPhone1, "")
-            bind(bName1, bName11, "")
-            bind(bName2, bName21, "")
-            bind(bIdCard1, bIdCard11, "")
-            bind(bIdCard2, bIdCard21, "")
+            bind(aName, aName1, "姓名：", "aName")
+            bind(aBir, aBir1, "出生日期：", "aBir")
+            bind(aIdCard, aIdCard1, "身份证号：", "aIdCard")
+            bind(aAddress, aAddress1, "联系地址：", "aAddress")
+            bind(aZipCode, aZipCode1, "邮政编码：", "aZipCode")
+            bind(sPhone, sPhone1, "", "sPhone")
+            bind(bName1, bName11, "", "bName1")
+            bind(bName2, bName21, "", "bName2")
+            bind(bIdCard1, bIdCard11, "", "bIdCard1")
+            bind(bIdCard2, bIdCard21, "", "bIdCard2")
 
+            $("input[name='aGender']").click(function () {
+                var gender = $(this).val()
+                if (gender === "1") {
+                    $("#aGender1").html("性别：男☑女☐")
+                    value["aGender"] = "1"
+                } else {
+                    $("#aGender1").html("性别：男☐女☑")
+                    value["aGender"] = "0"
+                }
+            })
+
+            $("input[name='bNumber']").click(function () {
+                var bNumber = $(this).val()
+                if (bNumber === "1") {
+                    $("#bNumber1").html("1")
+                    $("#bNumber2").html("2")
+                    value["bNumber1"] = 1
+                    value["bNumber2"] = 2
+                } else {
+                    $("#bNumber1").html("2")
+                    $("#bNumber2").html("1")
+                    value["bNumber1"] = 2
+                    value["bNumber2"] = 1
+                }
+            })
+
+            $("#sName").change(function () {
+                value["sName"] = $("#sName option:selected").text()
+                value["jobNumber"] = $("#sName option:selected").val()
+                $("#sName1").html($("#sName option:selected").text())
+            })
+
+            $("#hAddress").blur(function () {
+                $("#holder").html(confirmed +
+                    "<tr>" +
+                    "<td colspan='2'>联系地址：" + $("#hAddress").val() + "</td>" +
+                    "<td>邮政编码：" + $("#hZipCode").val() + "</td>" +
+                    "</tr>"
+                )
+            })
+
+            $("#hZipCode").blur(function () {
+                $("#holder").html(confirmed +
+                    "                <tr>" +
+                    "                    <td colspan='2'>联系地址：" + $("#hAddress").val() + "</td>" +
+                    "                    <td>邮政编码：" + $("#hZipCode").val() + "</td>" +
+                    "                </tr>"
+                )
+            })
+
+            $("#submit").click(function () {
+                value["hAddress"] = $("#hAddress").val()
+                value["hZipCode"] = $("#hZipCode").val()
+                value["iId"] = $.cookie("iId")
+                value["iName"] = $.cookie("iName")
+                console.log(value)
+                let i = 0
+                for (let k in value) {
+                    if (value[k] === "") {
+                        i = 1
+                    }
+                }
+                if (i === 1) {
+                    toastr.warning("请完善所有信息")
+                } else {
+                    let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+                    let reg2 = /^1[3456789]\d{9}$/
+                    let reg3 = /^[1-9][0-9]{5}$/
+                    if (reg.test(value["hIdCard"]) === false || reg.test(value["aIdCard"]) === false ||
+                        reg.test(value["bIdCard1"]) === false || reg.test(value["bIdCard2"]) === false) {
+                        toastr.warning("请输入正确的身份证号码！！")
+                    } else if (reg2.test(value["sPhone"]) === false) {
+                        toastr.warning("请输入正确的联系电话！！")
+                    } else if (reg3.test(value["hZipCode"]) === false || reg3.test(value["aZipCode"]) === false) {
+                        toastr.warning("请输入正确的邮政编码！！")
+                    } else {
+                        if (confirm("请确认是否购买")) {
+                            $.post({
+                                url: host + "/policy/purchase",
+                                data: {
+                                    value: JSON.stringify(value)
+                                },
+                                success: function (date) {
+                                    alert(date)
+                                }
+                            })
+                        }
+                    }
+                }
+            })
         </script>
     </body>
 </html>
