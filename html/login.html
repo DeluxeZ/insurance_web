@@ -98,6 +98,7 @@
                                 success:function (data) {
                                     if (data === 1){
                                         toastr.success("请稍后...")
+                                        window.location.href = "admin.html"
                                     } else {
                                         toastr.error("对不起，您无权限")
                                     }
@@ -128,7 +129,7 @@
                 <option value="salesmen">业务员登录</option>
                 <option value="admin">管理员登录</option>
             </select>
-            <input type="text" id="id_input" autocomplete="off" placeholder="请输入身份证号"/>
+            <input type="text" id="id_input" autocomplete="off" placeholder="请输入账号"/>
             <input type="password" id="password_input" autocomplete="new-password" placeholder="请输入密码"/>
             <a href="signUp.html">去注册</a>
             <button id="confirm">确&nbsp认</button>

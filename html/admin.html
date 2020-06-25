@@ -62,7 +62,8 @@
             #content1 {
             }
 
-            #content2 {
+            #content4 {
+                padding-left: 200px;
             }
 
             .tables {
@@ -81,50 +82,60 @@
                 line-height: 30px;
                 padding: 0;
             }
+
+            #age input {
+                display: inline-block;
+                width: 40px;
+                padding: 2px;
+            }
         </style>
         <script>
             var host = "http://127.0.0.1:8080"
 
             var deleteIn = function (id) {
-                $.post({
-                    url: host + "/insurance/delete",
-                    data: {
-                        id: id
-                    },
-                    success: function (data) {
-                        if (data === 1) {
-                            var button = document.getElementById(id)
-                            button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode)
-                            toastr.success("已删除该险种")
-                        } else {
-                            toastr.warning("请稍后操作！！")
+                if (confirm("真的要删除此险种吗")) {
+                    $.post({
+                        url: host + "/insurance/delete",
+                        data: {
+                            id: id
+                        },
+                        success: function (data) {
+                            if (data === 1) {
+                                var button = document.getElementById(id)
+                                button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode)
+                                toastr.success("已删除该险种")
+                            } else {
+                                toastr.warning("请稍后操作！！")
+                            }
+                        },
+                        error: function () {
+                            toastr.error("网络错误，请稍后重试！！")
                         }
-                    },
-                    error: function () {
-                        toastr.error("网络错误，请稍后重试！！")
-                    }
-                })
+                    })
+                }
             }
 
             var deleteSa = function (id) {
-                $.post({
-                    url: host + "/sales/delete",
-                    data: {
-                        jobNumber: id
-                    },
-                    success: function (data) {
-                        if (data === 1) {
-                            var button = document.getElementById(id)
-                            button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode)
-                            toastr.success("已删除该险种")
-                        } else {
-                            toastr.warning("请稍后操作！！")
+                if (confirm("确认删除此业务员？")) {
+                    $.post({
+                        url: host + "/sales/delete",
+                        data: {
+                            jobNumber: id
+                        },
+                        success: function (data) {
+                            if (data === 1) {
+                                var button = document.getElementById(id)
+                                button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode)
+                                toastr.success("已删除该险种")
+                            } else {
+                                toastr.warning("请稍后操作！！")
+                            }
+                        },
+                        error: function () {
+                            toastr.error("网络错误，请稍后重试！！")
                         }
-                    },
-                    error: function () {
-                        toastr.error("网络错误，请稍后重试！！")
-                    }
-                })
+                    })
+                }
             }
         </script>
     </head>
@@ -155,7 +166,7 @@
                         </table>
                     </div>
                     <script>
-                        var details = document.getElementById("details")
+                        let details = document.getElementById("details")
                         var getAge = function (index, array) {
                             let ageStart = array[index].ageStart
                             let ageEnd = array[index].ageEnd
@@ -201,11 +212,10 @@
                         </table>
                     </div>
                     <script>
-                        var details1 = document.getElementById("details1")
+                        let details1 = document.getElementById("details1")
                         $.post({
                             url: host + "/query/salesList",
                             success: function (data) {
-                                console.log(data)
                                 for (let i = 0; i < data.length; i++) {
                                     details1.innerHTML += "<tr>" +
                                         "<td>" + data[i].jobNumber + "</td>" +
@@ -219,8 +229,112 @@
                             }
                         })
                     </script>
-                    <div id="content3" class="content"></div>
-                    <div id="content4" class="content"></div>
+                    <div id="content3" class="content">
+                        <table class="tables">
+                            <th>保单号</th>
+                            <th>险种</th>
+                            <th>日期</th>
+                            <th>投保人</th>
+                            <th>被保人</th>
+                            <th>业务员</th>
+                            <tbody id="details2">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <script>
+                        let details2 = document.getElementById("details2")
+                        $.post({
+                            url: host + "/policy/policyList",
+                            success: function (data) {
+                                console.log(data)
+                                for (let i = 0; i < data.length; i++) {
+                                    details2.innerHTML += "<tr>" +
+                                        "<td>" + data[i].pid + "</td>" +
+                                        "<td>" + data[i].iName + "</td>" +
+                                        "<td>" + data[i].date + "</td>" +
+                                        "<td>" + data[i].hName + "</td>" +
+                                        "<td>" + data[i].aName + "</td>" +
+                                        "<td>" + data[i].sName + "</td>" +
+                                        "</tr>"
+                                }
+                            }
+                        })
+                    </script>
+                    <div id="content4" class="content">
+                        <h4>增加险种</h4>
+                        <p>险种名称：<span style="color: red">*</span><input type="text" id="iname"/></p>
+                        <p>承保年龄：<span style="color: red">*</span></p>
+                        <div id="age">
+                            <input type="text" id="yearStart"/>岁
+                            <input type="text" id="monthStart"/>月
+                            <input type="text" id="dayStart"/>日~~
+                            <input type="text" id="yearEnd"/>岁
+                            <input type="text" id="monthEnd"/>月
+                            <input type="text" id="dayEnd"/>日
+                        </div>
+                        <p>保险利益：<span style="color: red">*</span><textarea type="text" id="benefit"></textarea></p>
+                        <p>缴费方式：<span style="color: red">*</span><textarea type="text" id="payment"></textarea></p>
+                        <p>保险费：<span style="color: red">*</span><input type="text" id="premium"/>（元）</p>
+                        <p>保险特点：<span style="color: red">*</span><textarea type="text" id="advantage"></textarea></p>
+                        <button id="submit">提交</button>
+                    </div>
+                    <script>
+                        function isNum(String) {
+                            var reg = /^[0-9]+.?[0-9]*$/
+                            if (reg.test(String)) {
+                                return false
+                            } else {
+                                return true
+                            }
+                        }
+
+                        $("#submit").click(function () {
+                            let iname = $("#iname").val()
+                            let yearStart = $("#yearStart").val()
+                            let monthStart = $("#monthStart").val()
+                            let dayStart = $("#dayStart").val()
+                            let yearEnd = $("#yearEnd").val()
+                            let monthEnd = $("#monthEnd").val()
+                            let dayEnd = $("#dayEnd").val()
+                            let benefit = $("#benefit").val()
+                            let payment = $("#payment").val()
+                            let premium = $("#premium").val()
+                            let advantage = $("#advantage").val()
+                            if (iname === "" || yearStart === "" || monthStart === "" || dayStart === "" ||
+                                yearEnd === "" || monthEnd === "" || dayEnd === "" || benefit === "" ||
+                                payment === "" || premium === "" || advantage === "") {
+                                toastr.warning("请输入完整的保险信息！！")
+                            } else {
+                                if (isNum(yearStart) || isNum(monthStart) || isNum(dayStart) ||
+                                    isNum(yearEnd) || isNum(monthEnd) || isNum(dayEnd)) {
+                                    toastr.warning("请输入正确的承保年龄！")
+                                } else if (isNum(premium)) {
+                                    toastr.warning("请输入正确的保险费，单位（元）！")
+                                } else {
+                                    let ageStart = yearStart + "." + monthStart + "." + dayStart
+                                    let ageEnd = yearEnd + "." + monthEnd + "." + dayEnd
+                                    $.post({
+                                        url: host + "/insurance/insert",
+                                        data: {
+                                            data: JSON.stringify({
+                                                iname: iname,
+                                                ageStart: ageStart,
+                                                ageEnd: ageEnd,
+                                                benefit: benefit,
+                                                payment: payment,
+                                                premium: premium,
+                                                advantage: advantage
+                                            })
+                                        },
+                                        success: function (data) {
+                                            console.log(data)
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    </script>
                     <div id="content5" class="content"></div>
                 </div>
             </div>

@@ -43,7 +43,7 @@
             window.onload = function () {
                 if ($.cookie("id") === undefined || $.cookie("id") === "") {
                     window.location.href = "login.html"
-                } else if ($.cookie("pid") === undefined || $.cookie("pid") === "") {
+                } else if ($.cookie("iId") === undefined || $.cookie("iId") === "") {
                     window.location.href = "index.html"
                 } else {
                     $.post({
