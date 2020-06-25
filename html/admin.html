@@ -56,16 +56,77 @@
                 float: left;
                 width: 918px;
                 height: 500px;
+                padding: 10px;
             }
 
             #content1 {
-                background-color: red;
             }
 
             #content2 {
-                background-color: yellow;
+            }
+
+            .tables {
+                text-align: center;
+            }
+
+            .delete {
+                font-size: 14px;
+                outline: none;
+                border-radius: 15px;
+                width: 100px;
+                height: 30px;
+                color: white;
+                text-align: center;
+                background-color: rgb(221, 83, 71);
+                line-height: 30px;
+                padding: 0;
             }
         </style>
+        <script>
+            var host = "http://127.0.0.1:8080"
+
+            var deleteIn = function (id) {
+                $.post({
+                    url: host + "/insurance/delete",
+                    data: {
+                        id: id
+                    },
+                    success: function (data) {
+                        if (data === 1) {
+                            var button = document.getElementById(id)
+                            button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode)
+                            toastr.success("已删除该险种")
+                        } else {
+                            toastr.warning("请稍后操作！！")
+                        }
+                    },
+                    error: function () {
+                        toastr.error("网络错误，请稍后重试！！")
+                    }
+                })
+            }
+
+            var deleteSa = function (id) {
+                $.post({
+                    url: host + "/sales/delete",
+                    data: {
+                        jobNumber: id
+                    },
+                    success: function (data) {
+                        if (data === 1) {
+                            var button = document.getElementById(id)
+                            button.parentNode.parentNode.parentNode.removeChild(button.parentNode.parentNode)
+                            toastr.success("已删除该险种")
+                        } else {
+                            toastr.warning("请稍后操作！！")
+                        }
+                    },
+                    error: function () {
+                        toastr.error("网络错误，请稍后重试！！")
+                    }
+                })
+            }
+        </script>
     </head>
     <body>
         <div class="container paper clearfix" style="padding: 1rem">
@@ -82,9 +143,82 @@
             <div style="overflow-x: hidden">
                 <div id="display">
                     <div id="content1" class="content">
+                        <table class="tables">
+                            <th>#</th>
+                            <th>险种名称</th>
+                            <th>适用人群</th>
+                            <th>保费</th>
+                            <th>操作</th>
+                            <tbody id="details">
+
+                            </tbody>
+                        </table>
                     </div>
+                    <script>
+                        var details = document.getElementById("details")
+                        var getAge = function (index, array) {
+                            let ageStart = array[index].ageStart
+                            let ageEnd = array[index].ageEnd
+                            let startArray = ageStart.split(".")
+                            let endArray = ageEnd.split(".")
+                            let yearStart = startArray[0]
+                            let mouthStart = startArray[1]
+                            let dayStart = startArray[2]
+                            let yearEnd = endArray[0]
+                            let mouthEnd = endArray[1]
+                            let dayEnd = endArray[2]
+                            return yearStart + "岁" + mouthStart + "月" + dayStart + "天~~" + yearEnd + "岁" + mouthEnd + "月" + dayEnd + "天"
+                        }
+                        $.post({
+                            url: host + "/insurance/getInAll",
+                            success: function (data) {
+                                for (let i = 0; i < data.length; i++) {
+                                    details.innerHTML += "<tr>" +
+                                        "<td>" + data[i].id + "</td>" +
+                                        "<td>" + data[i].iname + "</td>" +
+                                        "<td>" + getAge(i, data) + "</td>" +
+                                        "<td>" + data[i].premium + "</td>" +
+                                        "<td><button id='" + data[i].id + "' class='delete' onclick='deleteIn(this.id)'>删除</button></td>" +
+                                        "</tr>"
+                                }
+                            },
+                            error: function () {
+                                toastr.error("网络错误，请稍后重试！！")
+                            }
+                        })
+                    </script>
                     <div id="content2" class="content">
+                        <table class="tables">
+                            <th>#</th>
+                            <th>业务员姓名</th>
+                            <th>性别</th>
+                            <th>身份证号</th>
+                            <th>电话号码</th>
+                            <th>操作</th>
+                            <tbody id="details1">
+
+                            </tbody>
+                        </table>
                     </div>
+                    <script>
+                        var details1 = document.getElementById("details1")
+                        $.post({
+                            url: host + "/query/salesList",
+                            success: function (data) {
+                                console.log(data)
+                                for (let i = 0; i < data.length; i++) {
+                                    details1.innerHTML += "<tr>" +
+                                        "<td>" + data[i].jobNumber + "</td>" +
+                                        "<td>" + data[i].sname + "</td>" +
+                                        "<td>" + (data[i].gender === 0 ? "女" : "男") + "</td>" +
+                                        "<td>" + data[i].idCard + "</td>" +
+                                        "<td>" + data[i].phone + "</td>" +
+                                        "<td><button id='" + data[i].jobNumber + "' class='delete' onclick='deleteSa(this.id)'>删除</button></td>" +
+                                        "</tr>"
+                                }
+                            }
+                        })
+                    </script>
                     <div id="content3" class="content"></div>
                     <div id="content4" class="content"></div>
                     <div id="content5" class="content"></div>
@@ -99,9 +233,8 @@
             var display = document.getElementById("display")
             $("#navigation li").click(function () {
                 let pos = $(this).index()
-                $("#display").css("left", - pos * 918 + "px")
+                $("#display").css("left", -pos * 918 + "px")
             })
-
         </script>
     </body>
 </html>
