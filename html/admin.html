@@ -59,7 +59,8 @@
                 padding: 10px;
             }
 
-            #content1 {
+            #content5 {
+                padding-left: 200px;
             }
 
             #content4 {
@@ -160,9 +161,7 @@
                             <th>适用人群</th>
                             <th>保费</th>
                             <th>操作</th>
-                            <tbody id="details">
-
-                            </tbody>
+                            <tbody id="details"></tbody>
                         </table>
                     </div>
                     <script>
@@ -206,9 +205,7 @@
                             <th>身份证号</th>
                             <th>电话号码</th>
                             <th>操作</th>
-                            <tbody id="details1">
-
-                            </tbody>
+                            <tbody id="details1"></tbody>
                         </table>
                     </div>
                     <script>
@@ -226,6 +223,9 @@
                                         "<td><button id='" + data[i].jobNumber + "' class='delete' onclick='deleteSa(this.id)'>删除</button></td>" +
                                         "</tr>"
                                 }
+                            },
+                            error: function () {
+                                toastr.error("网络错误，请稍后重试！！")
                             }
                         })
                     </script>
@@ -237,9 +237,7 @@
                             <th>投保人</th>
                             <th>被保人</th>
                             <th>业务员</th>
-                            <tbody id="details2">
-
-                            </tbody>
+                            <tbody id="details2"></tbody>
                         </table>
                     </div>
                     <script>
@@ -258,6 +256,9 @@
                                         "<td>" + data[i].sName + "</td>" +
                                         "</tr>"
                                 }
+                            },
+                            error: function () {
+                                toastr.error("网络错误，请稍后重试！！")
                             }
                         })
                     </script>
@@ -328,14 +329,73 @@
                                             })
                                         },
                                         success: function (data) {
-                                            console.log(data)
+                                            if (data === 1) {
+                                                toastr.success("添加成功，请刷新查看")
+                                            } else {
+                                                toastr.warning("请稍后重试")
+                                            }
+                                        },
+                                        error: function () {
+                                            toastr.error("网络错误，请稍后重试！！")
                                         }
                                     })
                                 }
                             }
                         })
                     </script>
-                    <div id="content5" class="content"></div>
+                    <div id="content5" class="content">
+                        <h4>增加业务员</h4>
+                        <p>身份证号：<span style="color: red">*</span><input type="text" id="idCard"/></p>
+                        <p>姓名：<span style="color: red">*</span><input type="text" id="sname"/></p>
+                        <p>电话号码：<span style="color: red">*</span><input type="text" id="phone"/></p>
+                        <p>性别:<span style="color: red">*</span>
+                            <label><input type="radio" name="gender" value="1" style="display: inline-block"/>男</label>
+                            <label><input type="radio" name="gender" value="0" style="display: inline-block"/>女</label>
+                        </p>
+                        <p>登陆密码：<span style="color: red">*</span><input type="text" id="password"/></p>
+                        <button id="button">提交</button>
+                    </div>
+                    <script>
+                        $("#button").click(function () {
+                            let idCard = $("#idCard").val()
+                            let sname = $("#sname").val()
+                            let phone = $("#phone").val()
+                            let gender = $("input[name='gender']:checked").val()
+                            let password = $("#password").val()
+                            if (idCard === "" || sname === "" || phone === "" || gender === "" || password === "") {
+                                toastr.warning("请输入完整业务员信息！！")
+                            } else {
+                                let reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                                let reg1 = /^1[3456789]\d{9}$/
+                                if (reg.test(idCard) === false) {
+                                    toastr.warning("请输入正确的身份证号码！！")
+                                } else if (reg1.test(phone) === false) {
+                                    toastr.warning("请输入正确的手机号码")
+                                } else {
+                                    $.post({
+                                        url: host + "/sales/insert",
+                                        data: {
+                                            idCard: idCard,
+                                            sname: sname,
+                                            phone: phone,
+                                            gender: gender,
+                                            password: password
+                                        },
+                                        success: function (data) {
+                                            if (data === 1) {
+                                                toastr.success("添加成功，请刷新查看")
+                                            } else {
+                                                toastr.warning("请稍后重试")
+                                            }
+                                        },
+                                        error: function () {
+                                            toastr.error("网络错误，请稍后重试！！")
+                                        }
+                                    })
+                                }
+                            }
+                        })
+                    </script>
                 </div>
             </div>
             <br/>
