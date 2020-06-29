@@ -410,8 +410,15 @@
                                 data: {
                                     value: JSON.stringify(value)
                                 },
-                                success: function (date) {
-                                    alert(date)
+                                success: function (data) {
+                                    if (data === 1) {
+                                        toastr.success("购买成功")
+                                    } else {
+                                        toastr.warning("购买失败，请稍后重试")
+                                    }
+                                },
+                                error: function () {
+                                    toastr.error("网络错误，请重试")
                                 }
                             })
                         }
